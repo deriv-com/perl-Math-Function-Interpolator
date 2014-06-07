@@ -41,6 +41,22 @@ sub do_calculation {
     return $m * $x + $c;
 }
 
+=head1 SYNOPSIS
+
+    use Math::Function::Interpolator;
+
+    my $interpolator = Math::Function::Interpolator->new(
+        points => {1=>2,2=>3,3=>4}
+    );
+
+    $interpolator->linear(2.5);
+
+=head1 DESCRIPTION
+
+Math::Function::Interpolator::Linear helps you to do the interpolation calculation with linear method.
+It solves for point_y linearly given point_x and an array of points.    
+
+
 =head1 AUTHOR
 
 Binary.com, C<< <perl at binary.com> >>

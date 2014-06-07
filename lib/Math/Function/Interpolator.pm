@@ -7,12 +7,15 @@ use warnings FATAL => 'all';
 use Moose;
 with qw(MooseX::Traits);
 
+use Carp qw(confess);
+use Scalar::Util qw(looks_like_number);
 use Module::Runtime;
 use Module::Pluggable
   sub_name    => 'interpolate_methods',
   search_path => ['Math::Function::Interpolator'],
   ;
 
+# Automatically load all interpolate methods
 has 'interpolate_classes' => (
     is      => 'ro',
     isa     => 'Bool',
@@ -50,7 +53,7 @@ sub BUILDARGS {    ## no critic (Subroutines::RequireArgUnpacking)
 
 =head1 NAME
 
-Math::Function::Interpolator - The great new Math::Function::Interpolator!
+Math::Function::Interpolator - Interpolation made easy
 
 =head1 VERSION
 
@@ -62,34 +65,38 @@ our $VERSION = '0.01';
 
 =head1 SYNOPSIS
 
-Quick summary of what the module does.
-
-Perhaps a little code snippet.
-
     use Math::Function::Interpolator;
 
-    my $interpolator = Math::Function::Interpolator->new( points => {1=>2,2=>3,3=>4} );
+    my $interpolator = Math::Function::Interpolator->new(
+        points => {1=>2,2=>3,3=>4}
+    );
 
     $interpolator->linear(2.5);
 
     $interpolator->quadratic(2.5);
 
     $interpolator->cubic(2.5);
-    
+
+=head1 DESCRIPTION
+
+Math::Function::Interpolator helps you to do the interpolation calculation with linear, quadratic and cubic methods.    
 
 =head1 EXPORT
 
-A list of functions that can be exported.  You can delete this section
-if you don't export anything, such as for a purely object-oriented module.
+=head2 linear
+=head2 quadratic
+=head2 cubic
 
 =head1 SUBROUTINES/METHODS
 
 =head2 linear
+This method do the linear interpolation. It solves for point_y linearly given point_x and an array of points.
 
 =cut
 
 sub linear {
     my ( $self, $x ) = @_;
+    confess "point_x must be numeric" if !looks_like_number($x);
     $self->interpolate_classes();
     return Math::Function::Interpolator->with_traits(
         'Math::Function::Interpolator::Linear')->new( interpolate => $self )
@@ -97,11 +104,13 @@ sub linear {
 }
 
 =head2 quadratic
+This method do the quadratic interpolation. It solves the interpolated_y value given point_x with 3 data points.
 
 =cut
 
 sub quadratic {
     my ( $self, $x ) = @_;
+    confess "point_x must be numeric" if !looks_like_number($x);
     $self->interpolate_classes();
     return Math::Function::Interpolator->with_traits(
         'Math::Function::Interpolator::Quadratic')->new( interpolate => $self )
@@ -109,11 +118,13 @@ sub quadratic {
 }
 
 =head2 cubic
+This method do the cubic interpolation. It solves the interpolated_y given point_x and a minimum of 5 data points.
 
 =cut
 
 sub cubic {
     my ( $self, $x ) = @_;
+    confess "point_x must be numeric" if !looks_like_number($x);
     $self->interpolate_classes();
     return Math::Function::Interpolator->with_traits(
         'Math::Function::Interpolator::Cubic')->new( interpolate => $self )
@@ -129,8 +140,6 @@ Binary.com, C<< <perl at binary.com> >>
 Please report any bugs or feature requests to C<bug-math-function-interpolator at rt.cpan.org>, or through
 the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Math-Function-Interpolator>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
-
-
 
 
 =head1 SUPPORT

@@ -3,6 +3,7 @@ lib/Math/Function/Interpolator.pm
 Makefile.PL
 MANIFEST			This list of files
 README
+t/01-calculation.t
 t/00-load.t
 t/manifest.t
 t/pod-coverage.t

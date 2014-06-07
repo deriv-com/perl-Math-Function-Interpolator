@@ -8,7 +8,6 @@ our $VERSION = '0.01';
 
 use Moose::Role;
 
-use Data::Dumper;
 use Carp qw(confess);
 use List::MoreUtils qw(pairwise indexes);
 use List::Util qw(min max);
@@ -36,7 +35,7 @@ sub do_calculation {
     confess "cannot interpolate with fewer than 3 data points"
       if scalar @Xs < 3;
 
-    my @points = $self->get_closest_three_points( $x, \@Xs );
+    my @points = $self->_get_closest_three_points( $x, \@Xs );
     my $abc = mat( [ map { [ $_**2, $_, 1 ] } @points ] );
     my $sigmas = [ map { $ap->{$_} } @points ];
 
@@ -48,16 +47,12 @@ sub do_calculation {
     return ( $a * ( $x**2 ) + $b * $x + $c );
 }
 
-=head2 get_closest_three_points
 
-Returns the the closest three points to the sought point.
-The third point is chosen based on the point which is closer to mid point
+# Returns the the closest three points to the sought point.
+# The third point is chosen based on the point which is closer to mid point
+# $interpolator->_get_closest_three_points(2.4,[1,2,3,4,9]) #returns (2,3,4)
 
-    $interpolator->get_closest_three_points(2.4,[1,2,3,4,9]) #returns (2,3,4)
-
-=cut
-
-sub get_closest_three_points {
+sub _get_closest_three_points {
     my ( $self, $sought, $all_points ) = @_;
 
     my @ap = sort { $a <=> $b } @{$all_points};
@@ -72,6 +67,21 @@ sub get_closest_three_points {
 
     return @sorted;
 }
+
+=head1 SYNOPSIS
+
+    use Math::Function::Interpolator;
+
+    my $interpolator = Math::Function::Interpolator->new(
+        points => {1=>2,2=>3,3=>4,4=>5,5=>6}
+    );
+
+    $interpolator->quadratic(2.5);
+
+=head1 DESCRIPTION
+
+Math::Function::Interpolator::Quadratic helps you to do the interpolation calculation with quadratic method.
+It solves the interpolated_y given point_x and a minimum of 5 data points. 
 
 =head1 AUTHOR
 

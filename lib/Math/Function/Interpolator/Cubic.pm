@@ -144,6 +144,21 @@ sub do_calculation {
     return $vol;
 }
 
+=head1 SYNOPSIS
+
+    use Math::Function::Interpolator;
+
+    my $interpolator = Math::Function::Interpolator->new(
+        points => {1=>2,2=>3,3=>4}
+    );
+
+    $interpolator->cubic(2.5);
+
+=head1 DESCRIPTION
+
+Math::Function::Interpolator::Cubic helps you to do the interpolation calculation with cubic method.
+It solves the interpolated_y given point_x and a minimum of 5 data points. 
+
 =head1 AUTHOR
 
 Binary.com, C<< <perl at binary.com> >>
