@@ -47,11 +47,10 @@ sub _build__spline_points {
     my @Ys         = map { $points_ref->{$_} } @$Xs;
 
     # First element is 0
-    # Second derivative of the Y's
+    # Second derivative of the Ys
     my @y_2derivative  = (0);
-
-    my @u       = (0);
-    my $counter = @$Xs - 2;
+    my @u              = (0);
+    my $counter        = @$Xs - 2;
 
     for my $i ( 1 .. $counter ) {
         my $sig =
