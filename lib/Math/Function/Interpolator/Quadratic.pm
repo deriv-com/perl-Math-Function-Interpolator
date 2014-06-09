@@ -36,11 +36,14 @@ sub do_calculation {
       if scalar @Xs < 3;
 
     my @points = $self->_get_closest_three_points( $x, \@Xs );
+
+    # Three cofficient
     my $abc = mat( [ map { [ $_**2, $_, 1 ] } @points ] );
-    my $sigmas = [ map { $ap->{$_} } @points ];
+
+    my $y = [ map { $ap->{$_} } @points ];
 
     my $solution;
-    try { $solution = $abc->simq($sigmas) }
+    try { $solution = $abc->simq($y) }
     catch { confess 'Insoluble matrix: ' . $_; };
     my ( $a, $b, $c ) = @$solution;
 
