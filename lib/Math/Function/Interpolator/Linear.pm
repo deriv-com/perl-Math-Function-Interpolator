@@ -11,6 +11,10 @@ use Carp qw(confess);
 use Number::Closest::XS qw(find_closest_numbers_around);
 use Scalar::Util qw(looks_like_number);
 
+=head1 NAME
+Math::Function::Interpolator::Linear - Interpolation made easy
+=cut
+
 has 'interpolate' => (
     is       => 'ro',
     isa      => sub {
@@ -19,6 +23,13 @@ has 'interpolate' => (
     },
     required => 1
 );
+
+=head1 SUBROUTINES/METHODS
+
+=head2 linear
+do_calculation
+
+=cut
 
 # Solves for point_y linearly given point_x and an array of points.
 sub do_calculation {

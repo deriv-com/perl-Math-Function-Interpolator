@@ -92,6 +92,13 @@ sub _extrapolate_spline {
     return $first->{y} - ( $first->{x} - $x ) * $derivative1;
 }
 
+=head1 SUBROUTINES/METHODS
+
+=head2 cubic
+do_calculation
+
+=cut
+
 # Returns the interpolated_y given point_x and a minimum of 5 data points
 sub do_calculation {
     my ( $self, $x ) = @_;

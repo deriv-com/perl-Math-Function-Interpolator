@@ -37,6 +37,13 @@ has points => (
     required => 1,
 );
 
+=head1 SUBROUTINES/METHODS
+
+=head2 buildargs
+BUILDARGS
+
+=cut
+
 sub BUILDARGS {    ## no critic (Subroutines::RequireArgUnpacking)
     my $self = shift;
     my %args = ref( $_[0] ) ? %{ $_[0] } : @_;
