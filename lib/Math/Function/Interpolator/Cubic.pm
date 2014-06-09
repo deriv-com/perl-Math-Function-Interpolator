@@ -44,7 +44,9 @@ sub _build__spline_points {
     my @Ys         = map { $points_ref->{$_} } @$Xs;
 
     # First element is 0
-    my @sigma2  = (0);
+    # Second derivative of the Y's
+    my @y_2derivative  = (0);
+
     my @u       = (0);
     my $counter = @$Xs - 2;
 
@@ -52,8 +54,8 @@ sub _build__spline_points {
         my $sig =
           ( $Xs->[$i] - $Xs->[ $i - 1 ] ) /
           ( $Xs->[ $i + 1 ] - $Xs->[ $i - 1 ] );
-        my $p = $sig * $sigma2[ $i - 1 ] + 2;
-        $sigma2[$i] = ( $sig - 1 ) / $p;
+        my $p = $sig * $y_2derivative[ $i - 1 ] + 2;
+        $y_2derivative[$i] = ( $sig - 1 ) / $p;
         $u[$i] =
           ( $Ys[ $i + 1 ] - $Ys[$i] ) / ( $Xs->[ $i + 1 ] - $Xs->[$i] ) -
           ( $Ys[$i] - $Ys[ $i - 1 ] ) / ( $Xs->[$i] - $Xs->[ $i - 1 ] );
@@ -63,15 +65,15 @@ sub _build__spline_points {
     }
 
     # Last element is 0
-    push @sigma2, 0;
+    push @y_2derivative, 0;
 
     for ( my $i = $counter ; $i > 0 ; $i-- ) {
-        $sigma2[$i] = $sigma2[$i] * $sigma2[ $i + 1 ] + $u[$i];
+        $y_2derivative[$i] = $y_2derivative[$i] * $y_2derivative[ $i + 1 ] + $u[$i];
     }
 
-    my %sigma2_combined = pairwise { $a => $b } @$Xs, @sigma2;
+    my %y_2derivative_combined = pairwise { $a => $b } @$Xs, @y_2derivative;
 
-    return \%sigma2_combined;
+    return \%y_2derivative_combined;
 }
 
 sub _extrapolate_spline {
@@ -103,13 +105,13 @@ sub do_calculation {
 
     my $splines = $self->_spline_points;
 
-    my $vol;
+    my $y;
     if ( $x < $Xs->[0] or $x > $Xs->[-1] ) {
         my ( $spline_key, $first, $second ) =
           $x < $Xs->[0]
           ? ( $Xs->[1], $Xs->[0], $Xs->[1] )
           : ( $Xs->[-2], $Xs->[-2], $Xs->[-1] );
-        $vol = $self->_extrapolate_spline(
+        $y = $self->_extrapolate_spline(
             {
                 x           => $x,
                 derivative2 => $splines->{$spline_key},
@@ -134,14 +136,14 @@ sub do_calculation {
         my $C = ( $A**3 - $A ) * ( $range**2 ) / 6;
         my $D = ( $B**3 - $B ) * ( $range**2 ) / 6;
 
-        $vol =
+        $y =
           $A * $ap->{$first} +
           $B * $ap->{$second} +
           $C * $splines->{$first} +
           $D * $splines->{$second};
     }
 
-    return $vol;
+    return $y;
 }
 
 =head1 SYNOPSIS
