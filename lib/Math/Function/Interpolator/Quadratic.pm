@@ -26,6 +26,13 @@ has 'interpolate' => (
     required => 1
 );
 
+=head1 SUBROUTINES/METHODS
+
+=head2 quadratic
+do_calculation
+
+=cut
+
 # Returns the interpolated_y value given point_x with 3 data points
 sub do_calculation {
     my ( $self, $x ) = @_;
