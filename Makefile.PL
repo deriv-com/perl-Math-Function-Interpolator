@@ -16,9 +16,9 @@ WriteMakefile(
     },
     BUILD_REQUIRES => {
         'Test::More'            => 0,
-        'Moose'                 => 0,
-        'Moose::Role'           => 0,
-        'MooseX::Traits'        => 0,
+        'Moo'                   => 0,
+        'Moo::Role'             => 0,
+        'MooX::Traits'          => 0,
         'Module::Runtime'       => 0,
         'Module::Pluggable'     => 0,
         'Carp'                  => 0,

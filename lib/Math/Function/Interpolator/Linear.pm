@@ -6,14 +6,17 @@ use warnings FATAL => 'all';
 
 our $VERSION = '0.01';
 
-use Moose::Role;
-
+use Moo::Role;
+use Carp qw(confess);
 use Number::Closest::XS qw(find_closest_numbers_around);
 use Scalar::Util qw(looks_like_number);
 
 has 'interpolate' => (
     is       => 'ro',
-    isa      => 'Math::Function::Interpolator',
+    isa      => sub {
+        die "Must be Interpolate class"
+        unless ref $_[0] eq 'Math::Function::Interpolator';
+    },
     required => 1
 );
 

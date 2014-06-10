@@ -6,7 +6,7 @@ use warnings FATAL => 'all';
 
 our $VERSION = '0.01';
 
-use Moose::Role;
+use Moo::Role;
 
 use Carp qw(confess);
 use List::MoreUtils qw(pairwise indexes);
@@ -15,7 +15,10 @@ use Scalar::Util qw(looks_like_number);
 
 has 'interpolate' => (
     is       => 'ro',
-    isa      => 'Math::Function::Interpolator',
+    isa      => sub {
+        die "Must be Interpolate class"
+        unless ref $_[0] eq 'Math::Function::Interpolator';
+    },
     required => 1
 );
 
@@ -26,14 +29,14 @@ has _sorted_Xs => (
 );
 
 sub _build__sorted_Xs {
-    my $self = shift;
+    my ($self) = @_;
     return [ sort { $a <=> $b } keys %{ $self->interpolate->points } ];
 }
 
 has _spline_points => (
     is         => 'ro',
-    init_arg   => undef,
-    lazy_build => 1,
+    lazy       => 1,
+    builder    => '_build__spline_points',
 );
 
 sub _build__spline_points {
@@ -44,11 +47,10 @@ sub _build__spline_points {
     my @Ys         = map { $points_ref->{$_} } @$Xs;
 
     # First element is 0
-    # Second derivative of the Y's
+    # Second derivative of the Ys
     my @y_2derivative  = (0);
-
-    my @u       = (0);
-    my $counter = @$Xs - 2;
+    my @u              = (0);
+    my $counter        = @$Xs - 2;
 
     for my $i ( 1 .. $counter ) {
         my $sig =
@@ -91,7 +93,6 @@ sub _extrapolate_spline {
 }
 
 # Returns the interpolated_y given point_x and a minimum of 5 data points
-
 sub do_calculation {
     my ( $self, $x ) = @_;
 

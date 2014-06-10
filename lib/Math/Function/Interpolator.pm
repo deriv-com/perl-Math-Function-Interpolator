@@ -4,8 +4,8 @@ use 5.006;
 use strict;
 use warnings FATAL => 'all';
 
-use Moose;
-with qw(MooseX::Traits);
+use Moo;
+with qw(MooX::Traits);
 
 use Carp qw(confess);
 use Scalar::Util qw(looks_like_number);
@@ -13,12 +13,11 @@ use Module::Runtime;
 use Module::Pluggable
   sub_name    => 'interpolate_methods',
   search_path => ['Math::Function::Interpolator'],
-  ;
+;
 
 # Automatically load all interpolate methods
 has 'interpolate_classes' => (
     is      => 'ro',
-    isa     => 'Bool',
     lazy    => 1,
     default => sub {
         my ($self) = @_;
@@ -32,7 +31,9 @@ has 'interpolate_classes' => (
 
 has points => (
     is       => 'ro',
-    isa      => 'HashRef',
+    isa      => sub {
+        die "Points $_[0] shold be hash" unless ref $_[0] eq 'HASH';
+    },
     required => 1,
 );
 

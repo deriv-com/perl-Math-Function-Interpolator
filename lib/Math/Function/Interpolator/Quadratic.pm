@@ -6,7 +6,7 @@ use warnings FATAL => 'all';
 
 our $VERSION = '0.01';
 
-use Moose::Role;
+use Moo::Role;
 
 use Carp qw(confess);
 use List::MoreUtils qw(pairwise indexes);
@@ -19,7 +19,10 @@ use Try::Tiny;
 
 has 'interpolate' => (
     is       => 'ro',
-    isa      => 'Math::Function::Interpolator',
+    isa      => sub {
+        die "Must be Interpolate class"
+        unless ref $_[0] eq 'Math::Function::Interpolator';
+    },
     required => 1
 );
 
