@@ -26,9 +26,29 @@ has 'interpolate' => (
     required => 1
 );
 
-=head1 SUBROUTINES/METHODS
+=head1 NAME
 
-=head2 quadratic
+Math::Function::Interpolator::Quadratic
+
+=head1 SYNOPSIS
+
+    use Math::Function::Interpolator;
+
+    my $interpolator = Math::Function::Interpolator->new(
+        points => {1=>2,2=>3,3=>4,4=>5,5=>6}
+    );
+
+    $interpolator->quadratic(2.5);
+
+=head1 DESCRIPTION
+
+Math::Function::Interpolator::Quadratic helps you to do the interpolation calculation with quadratic method.
+It solves the interpolated_y given point_x and a minimum of 5 data points. 
+
+=head1 METHODS
+
+=head2 do_calculation
+
 do_calculation
 
 =cut
@@ -81,21 +101,6 @@ sub _get_closest_three_points {
     return @sorted;
 }
 
-=head1 SYNOPSIS
-
-    use Math::Function::Interpolator;
-
-    my $interpolator = Math::Function::Interpolator->new(
-        points => {1=>2,2=>3,3=>4,4=>5,5=>6}
-    );
-
-    $interpolator->quadratic(2.5);
-
-=head1 DESCRIPTION
-
-Math::Function::Interpolator::Quadratic helps you to do the interpolation calculation with quadratic method.
-It solves the interpolated_y given point_x and a minimum of 5 data points. 
-
 =head1 AUTHOR
 
 Binary.com, C<< <perl at binary.com> >>
@@ -105,9 +110,6 @@ Binary.com, C<< <perl at binary.com> >>
 Please report any bugs or feature requests to C<bug-math-function-interpolator at rt.cpan.org>, or through
 the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Math-Function-Interpolator>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
-
-
-
 
 =head1 SUPPORT
 

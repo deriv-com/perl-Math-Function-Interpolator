@@ -13,6 +13,27 @@ use List::MoreUtils qw(pairwise indexes);
 use Number::Closest::XS qw(find_closest_numbers_around);
 use Scalar::Util qw(looks_like_number);
 
+=head1 NAME
+
+Math::Function::Interpolator::Cubic
+
+=head1 SYNOPSIS
+
+    use Math::Function::Interpolator;
+
+    my $interpolator = Math::Function::Interpolator->new(
+        points => {1=>2,2=>3,3=>4}
+    );
+
+    $interpolator->cubic(2.5);
+
+=head1 DESCRIPTION
+
+Math::Function::Interpolator::Cubic helps you to do the interpolation calculation with cubic method.
+It solves the interpolated_y given point_x and a minimum of 5 data points. 
+
+=cut
+
 has 'interpolate' => (
     is       => 'ro',
     isa      => sub {
@@ -92,9 +113,10 @@ sub _extrapolate_spline {
     return $first->{y} - ( $first->{x} - $x ) * $derivative1;
 }
 
-=head1 SUBROUTINES/METHODS
+=head1 METHODS
 
-=head2 cubic
+=head2 do_calculation
+
 do_calculation
 
 =cut
@@ -154,20 +176,6 @@ sub do_calculation {
     return $y;
 }
 
-=head1 SYNOPSIS
-
-    use Math::Function::Interpolator;
-
-    my $interpolator = Math::Function::Interpolator->new(
-        points => {1=>2,2=>3,3=>4}
-    );
-
-    $interpolator->cubic(2.5);
-
-=head1 DESCRIPTION
-
-Math::Function::Interpolator::Cubic helps you to do the interpolation calculation with cubic method.
-It solves the interpolated_y given point_x and a minimum of 5 data points. 
 
 =head1 AUTHOR
 

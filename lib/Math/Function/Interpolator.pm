@@ -15,6 +15,42 @@ use Module::Pluggable
   search_path => ['Math::Function::Interpolator'],
 ;
 
+=head1 NAME
+
+Math::Function::Interpolator - Interpolation made easy
+
+=head1 VERSION
+
+Version 0.01
+
+=head1 SYNOPSIS
+
+    use Math::Function::Interpolator;
+
+    my $interpolator = Math::Function::Interpolator->new(
+        points => {1=>2,2=>3,3=>4}
+    );
+
+    $interpolator->linear(2.5);
+
+    $interpolator->quadratic(2.5);
+
+    $interpolator->cubic(2.5);
+
+=head1 DESCRIPTION
+
+Math::Function::Interpolator helps you to do the interpolation calculation with linear, quadratic and cubic methods.
+
+=head1 FIELDS
+
+=head2 points (REQUIRED)
+
+HashRef of points for interpolations
+
+=cut
+
+our $VERSION = '0.01';
+
 # Automatically load all interpolate methods
 has 'interpolate_classes' => (
     is      => 'ro',
@@ -37,9 +73,10 @@ has points => (
     required => 1,
 );
 
-=head1 SUBROUTINES/METHODS
+=head1 METHODS
 
-=head2 buildargs
+=head2 BUILDARGS
+
 BUILDARGS
 
 =cut
@@ -59,45 +96,8 @@ sub BUILDARGS {    ## no critic (Subroutines::RequireArgUnpacking)
     return \%args;
 }
 
-=head1 NAME
-
-Math::Function::Interpolator - Interpolation made easy
-
-=head1 VERSION
-
-Version 0.01
-
-=cut
-
-our $VERSION = '0.01';
-
-=head1 SYNOPSIS
-
-    use Math::Function::Interpolator;
-
-    my $interpolator = Math::Function::Interpolator->new(
-        points => {1=>2,2=>3,3=>4}
-    );
-
-    $interpolator->linear(2.5);
-
-    $interpolator->quadratic(2.5);
-
-    $interpolator->cubic(2.5);
-
-=head1 DESCRIPTION
-
-Math::Function::Interpolator helps you to do the interpolation calculation with linear, quadratic and cubic methods.    
-
-=head1 EXPORT
-
 =head2 linear
-=head2 quadratic
-=head2 cubic
 
-=head1 SUBROUTINES/METHODS
-
-=head2 linear
 This method do the linear interpolation. It solves for point_y linearly given point_x and an array of points.
 
 =cut
@@ -112,6 +112,7 @@ sub linear {
 }
 
 =head2 quadratic
+
 This method do the quadratic interpolation. It solves the interpolated_y value given point_x with 3 data points.
 
 =cut
@@ -126,6 +127,7 @@ sub quadratic {
 }
 
 =head2 cubic
+
 This method do the cubic interpolation. It solves the interpolated_y given point_x and a minimum of 5 data points.
 
 =cut
