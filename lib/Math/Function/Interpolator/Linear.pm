@@ -11,6 +11,27 @@ use Carp qw(confess);
 use Number::Closest::XS qw(find_closest_numbers_around);
 use Scalar::Util qw(looks_like_number);
 
+=head1 NAME
+
+Math::Function::Interpolator::Linear - Interpolation made easy
+
+=head1 SYNOPSIS
+
+    use Math::Function::Interpolator;
+
+    my $interpolator = Math::Function::Interpolator->new(
+        points => {1=>2,2=>3,3=>4}
+    );
+
+    $interpolator->linear(2.5);
+
+=head1 DESCRIPTION
+
+Math::Function::Interpolator::Linear helps you to do the interpolation calculation with linear method.
+It solves for point_y linearly given point_x and an array of points.    
+
+=cut
+
 has 'interpolate' => (
     is       => 'ro',
     isa      => sub {
@@ -19,6 +40,14 @@ has 'interpolate' => (
     },
     required => 1
 );
+
+=head1 METHODS
+
+=head2 do_calculation
+
+do_calculation
+
+=cut
 
 # Solves for point_y linearly given point_x and an array of points.
 sub do_calculation {
@@ -43,22 +72,6 @@ sub do_calculation {
 
     return $m * $x + $c;
 }
-
-=head1 SYNOPSIS
-
-    use Math::Function::Interpolator;
-
-    my $interpolator = Math::Function::Interpolator->new(
-        points => {1=>2,2=>3,3=>4}
-    );
-
-    $interpolator->linear(2.5);
-
-=head1 DESCRIPTION
-
-Math::Function::Interpolator::Linear helps you to do the interpolation calculation with linear method.
-It solves for point_y linearly given point_x and an array of points.    
-
 
 =head1 AUTHOR
 
