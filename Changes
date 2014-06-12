@@ -3,3 +3,10 @@ Revision history for Math-Function-Interpolator
 0.01    10/06/2014
         First version, released on an unsuspecting world.
 
+0.02    12/06/2014
+        POD Coverage.
+
+0.03    12/06/2014
+        Big fix, unwanted typo
+
+
