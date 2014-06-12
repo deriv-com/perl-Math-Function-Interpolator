@@ -21,7 +21,7 @@ Math::Function::Interpolator - Interpolation made easy
 
 =head1 VERSION
 
-Version 0.01
+Version 0.03
 
 =head1 SYNOPSIS
 
@@ -49,7 +49,7 @@ HashRef of points for interpolations
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.03';
 
 # Automatically load all interpolate methods
 has 'interpolate_classes' => (
@@ -227,8 +227,5 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 =cut
-
-no Moose;
-__PACKAGE__->meta->make_immutable;
 
 1;    # End of Math::Function::Interpolator
