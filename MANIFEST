@@ -1,7 +1,10 @@
 Changes
 lib/Math/Function/Interpolator.pm
+lib/Math/Function/Interpolator/Cubic.pm
+lib/Math/Function/Interpolator/Linear.pm
+lib/Math/Function/Interpolator/Quadratic.pm
 Makefile.PL
-MANIFEST			This list of files
+MANIFEST
 README
 t/01-calculation.t
 t/00-load.t
