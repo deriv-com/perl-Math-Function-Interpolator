@@ -4,7 +4,7 @@ use 5.006;
 use strict;
 use warnings FATAL => 'all';
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use Moo::Role;
 
@@ -31,6 +31,12 @@ Math::Function::Interpolator::Cubic
 
 Math::Function::Interpolator::Cubic helps you to do the interpolation calculation with cubic method.
 It solves the interpolated_y given point_x and a minimum of 5 data points. 
+
+=head1 FIELDS
+
+=head2 interpolate (REQUIRED)
+
+Interpolations class object
 
 =cut
 

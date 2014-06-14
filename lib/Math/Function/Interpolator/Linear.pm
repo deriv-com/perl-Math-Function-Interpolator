@@ -4,7 +4,7 @@ use 5.006;
 use strict;
 use warnings FATAL => 'all';
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use Moo::Role;
 use Carp qw(confess);
@@ -29,6 +29,12 @@ Math::Function::Interpolator::Linear - Interpolation made easy
 
 Math::Function::Interpolator::Linear helps you to do the interpolation calculation with linear method.
 It solves for point_y linearly given point_x and an array of points.    
+
+=head1 FIELDS
+
+=head2 interpolate (REQUIRED)
+
+Interpolations class object
 
 =cut
 
