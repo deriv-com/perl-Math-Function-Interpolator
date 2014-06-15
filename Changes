@@ -9,4 +9,9 @@ Revision history for Math-Function-Interpolator
 0.03    12/06/2014
         Big fix, unwanted typo
 
+0.04    14/06/2014
+        CPAN fail test improved
+
+0.05    15/06/2014
+        method closest_three_points exported, could be usefull for the Mathmatician
 
