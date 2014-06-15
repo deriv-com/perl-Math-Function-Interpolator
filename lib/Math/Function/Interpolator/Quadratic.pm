@@ -4,16 +4,12 @@ use 5.006;
 use strict;
 use warnings FATAL => 'all';
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 use Moo::Role;
 
 use Carp qw(confess);
-use List::MoreUtils qw(pairwise indexes);
-use List::Util qw(min max);
 use Math::Cephes::Matrix qw(mat);
-use Number::Closest::XS qw(find_closest_numbers_around);
-use POSIX;
 use Scalar::Util qw(looks_like_number);
 use Try::Tiny;
 
@@ -74,7 +70,7 @@ sub do_calculation {
     confess "cannot interpolate with fewer than 3 data points"
       if scalar @Xs < 3;
 
-    my @points = $self->_get_closest_three_points( $x, \@Xs );
+    my @points = $self->interpolate->closest_three_points( $x, \@Xs );
 
     # Three cofficient
     my $abc = mat( [ map { [ $_**2, $_, 1 ] } @points ] );
@@ -87,27 +83,6 @@ sub do_calculation {
     my ( $a, $b, $c ) = @$solution;
 
     return ( $a * ( $x**2 ) + $b * $x + $c );
-}
-
-
-# Returns the the closest three points to the sought point.
-# The third point is chosen based on the point which is closer to mid point
-# $interpolator->_get_closest_three_points(2.4,[1,2,3,4,9]) #returns (2,3,4)
-
-sub _get_closest_three_points {
-    my ( $self, $sought, $all_points ) = @_;
-
-    my @ap = sort { $a <=> $b } @{$all_points};
-    my $length = scalar @ap;
-
-    my ( $first, $second ) =
-      @{ find_closest_numbers_around( $sought, $all_points, 2 ) };
-    my @indexes = indexes { $first == $_ or $second == $_ } @ap;
-    my $third_index =
-      ( max(@indexes) < $length - 2 ) ? max(@indexes) + 1 : min(@indexes) - 1;
-    my @sorted = sort { $a <=> $b } ( $first, $second, $ap[$third_index] );
-
-    return @sorted;
 }
 
 =head1 AUTHOR

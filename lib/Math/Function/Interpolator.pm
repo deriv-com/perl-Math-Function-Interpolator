@@ -9,6 +9,11 @@ with qw(MooX::Traits);
 
 use Carp qw(confess);
 use Scalar::Util qw(looks_like_number);
+
+use Number::Closest::XS qw(find_closest_numbers_around);
+use List::MoreUtils qw(pairwise indexes);
+use List::Util qw(min max);
+
 use Module::Runtime;
 use Module::Pluggable
   sub_name    => 'interpolate_methods',
@@ -21,7 +26,7 @@ Math::Function::Interpolator - Interpolation made easy
 
 =head1 VERSION
 
-Version 0.04
+Version 0.05
 
 =head1 SYNOPSIS
 
@@ -49,7 +54,7 @@ HashRef of points for interpolations
 
 =cut
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 # Automatically load all interpolate methods
 has 'interpolate_classes' => (
@@ -139,6 +144,29 @@ sub cubic {
     return Math::Function::Interpolator->with_traits(
         'Math::Function::Interpolator::Cubic')->new( interpolate => $self )
       ->do_calculation($x);
+}
+
+=head2 closest_three_points
+
+ Returns the the closest three points to the sought point.
+ The third point is chosen based on the point which is closer to mid point
+
+=cut
+
+sub closest_three_points {
+    my ( $self, $sought, $all_points ) = @_;
+
+    my @ap = sort { $a <=> $b } @{$all_points};
+    my $length = scalar @ap;
+
+    my ( $first, $second ) =
+      @{ find_closest_numbers_around( $sought, $all_points, 2 ) };
+    my @indexes = indexes { $first == $_ or $second == $_ } @ap;
+    my $third_index =
+      ( max(@indexes) < $length - 2 ) ? max(@indexes) + 1 : min(@indexes) - 1;
+    my @sorted = sort { $a <=> $b } ( $first, $second, $ap[$third_index] );
+
+    return @sorted;
 }
 
 =head1 AUTHOR
