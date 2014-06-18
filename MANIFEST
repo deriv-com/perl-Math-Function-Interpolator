@@ -6,6 +6,7 @@ lib/Math/Function/Interpolator/Quadratic.pm
 Makefile.PL
 MANIFEST
 README
+t/02-intense_test.t
 t/01-calculation.t
 t/00-load.t
 t/manifest.t
