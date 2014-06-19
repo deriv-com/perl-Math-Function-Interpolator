@@ -16,6 +16,8 @@ WriteMakefile(
     },
     BUILD_REQUIRES => {
         'Test::More'            => 0,
+        'Test::FailWarnings'    => 0,
+        'Test::Exception'       => 0,
         'Moo'                   => 0,
         'Moo::Role'             => 0,
         'MooX::Traits'          => 0,
