@@ -26,7 +26,7 @@ Math::Function::Interpolator - Interpolation made easy
 
 =head1 VERSION
 
-Version 0.06
+Version 0.07
 
 =head1 SYNOPSIS
 
@@ -54,7 +54,7 @@ HashRef of points for interpolations
 
 =cut
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 # Automatically load all interpolate methods
 has 'interpolate_classes' => (
