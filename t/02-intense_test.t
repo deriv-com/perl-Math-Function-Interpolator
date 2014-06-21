@@ -3,10 +3,9 @@ use Test::FailWarnings;
 use Test::Exception;
 
 use Math::Function::Interpolator;
-
-my $interpolator = Math::Function::Interpolator->new(
-    points => {1=>2,2=>3,3=>4,4=>5,5=>6}
-);
+use Math::Function::Interpolator::Linear;
+use Math::Function::Interpolator::Quadratic;
+use Math::Function::Interpolator::Cubic;
 
 subtest "closest_three_points" => sub {
     plan tests => 9;
@@ -29,16 +28,16 @@ subtest "closest_three_points" => sub {
 subtest "general checks for linear" => sub {
     plan tests => 4;
     my $o;
-    lives_ok { $o = Math::Function::Interpolator->new(points => {2 => 3, 4 => 5.5}) } "can instantiate object with 2 points";
+    lives_ok { $o = Math::Function::Interpolator::Linear->new(points => {2 => 3, 4 => 5.5}) } "can instantiate object with 2 points";
     lives_ok { $o->linear(2.4) } "can linear given an X";
-    throws_ok { $o->linear('abc') } qr/point_x must be numeric/, "dies when X is not a number";
-    throws_ok { Math::Function::Interpolator->new(points => {2 => 3,})->linear(1) } qr/cannot interpolate with fewer than 2 data points/,
+    throws_ok { $o->linear('abc') } qr/sought\S+ must be a number/, "dies when X is not a number";
+    throws_ok { Math::Function::Interpolator::Linear->new(points => {2 => 3,})->linear(1) } qr/cannot interpolate with fewer than 2 data points/,
       "cannot linear linear equation with one data point";
 };
 
 subtest "verify linear interpolation and extrapolation" => sub {
     plan tests => 4;
-    my $o = Math::Function::Interpolator->new(
+    my $o = Math::Function::Interpolator::Linear->new(
         points => {
             1 => 3,
             2 => 4.5,
@@ -53,10 +52,10 @@ subtest "verify linear interpolation and extrapolation" => sub {
 subtest "general checks for quadratic" => sub {
     plan tests => 4;
     my $o;
-    lives_ok { $o = Math::Function::Interpolator->new(points => {2 => 3, 4 => 5.5, 6 => 8}) } "can instantiate object with 3 points";
+    lives_ok { $o = Math::Function::Interpolator::Quadratic->new(points => {2 => 3, 4 => 5.5, 6 => 8}) } "can instantiate object with 3 points";
     lives_ok { $o->quadratic(2.4) } "can quadratic given an X";
-    throws_ok { $o->quadratic('abc') } qr/point_x must be numeric/, "dies when X is not a number";
-    throws_ok { Math::Function::Interpolator->new(points => {2 => 3, 4 => 5})->quadratic(1) }
+    throws_ok { $o->quadratic('abc') } qr/sought\S+ must be a number/, "dies when X is not a number";
+    throws_ok { Math::Function::Interpolator::Quadratic->new(points => {2 => 3, 4 => 5})->quadratic(1) }
     qr/cannot interpolate with fewer than 3 data points/,
       "cannot solve quadratic equation with two data point";
 };
@@ -68,20 +67,20 @@ subtest "verify quadratic interpolation and extrapolation" => sub {
         2  => 3,
         -2 => 19,
     };
-    my $o = Math::Function::Interpolator->new(points => $points);
+    my $o = Math::Function::Interpolator::Quadratic->new(points => $points);
     is($o->quadratic(2.4), 2.72, "correctly interpolate y given x=2.4");
     $points->{4} = 7;
-    my $o_new = Math::Function::Interpolator->new(points => $points);
+    my $o_new = Math::Function::Interpolator::Quadratic->new(points => $points);
     lives_ok { $o_new->quadratic(2.4) } "can solve quadratic equation with 4 data points ";
 };
 
 subtest "general checks for cubic" => sub {
     plan tests => 4;
     my $o;
-    lives_ok { $o = Math::Function::Interpolator->new(points => {2 => 3, 4 => 5.5, 6 => 8, 7 => 9, 10 => 14}) } "can instantiate object with 5 points";
+    lives_ok { $o = Math::Function::Interpolator::Cubic->new(points => {2 => 3, 4 => 5.5, 6 => 8, 7 => 9, 10 => 14}) } "can instantiate object with 5 points";
     lives_ok { $o->cubic(2.4) } "can cubic given an X";
-    throws_ok { $o->cubic('abc') } qr/point_x must be numeric/, "dies when X is not a number";
-    throws_ok { Math::Function::Interpolator->new(points => {2 => 3, 4 => 5, 2 => 6, 4 => 11})->cubic(1) }
+    throws_ok { $o->cubic('abc') } qr/sought\S+ must be a numeric/, "dies when X is not a number";
+    throws_ok { Math::Function::Interpolator::Cubic->new(points => {2 => 3, 4 => 5, 2 => 6, 4 => 11})->cubic(1) }
     qr/cannot interpolate with fewer than 5 data points/, "cannot cubic equation with four data point";
 };
 
@@ -106,7 +105,7 @@ subtest "cubic interpolation compared to Bloomberg" => sub {
         104 => 0.2402
     };
 
-    my $o = Math::Function::Interpolator->new(points => $points);
+    my $o = Math::Function::Interpolator::Cubic->new(points => $points);
     foreach my $num (96 .. 104) {
         next if grep { $_ == $num } keys %$points;
         my $test = $o->cubic($num);
@@ -124,7 +123,7 @@ subtest "cubic extrapolation" => sub {
         102.5 => 0.2461,
         105   => 0.2364
     };
-    my $o = Math::Function::Interpolator->new(points => $points);
+    my $o = Math::Function::Interpolator::Cubic->new(points => $points);
     lives_ok { $o->cubic(80) } "can extrapolate";
     my $first  = $o->cubic(94);
     my $second = $o->cubic(93);

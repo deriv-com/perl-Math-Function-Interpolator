@@ -20,3 +20,6 @@ Revision history for Math-Function-Interpolator
 
 0.07    19/06/2014
         Makefile improved, added required modules
+
+0.08    23/06/2014
+        Removed Moose, Moo uses and made pure old style object oriented

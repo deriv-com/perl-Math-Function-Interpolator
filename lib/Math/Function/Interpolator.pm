@@ -4,9 +4,6 @@ use 5.006;
 use strict;
 use warnings FATAL => 'all';
 
-use Moo;
-with qw(MooX::Traits);
-
 use Carp qw(confess);
 use Scalar::Util qw(looks_like_number);
 
@@ -14,19 +11,13 @@ use Number::Closest::XS qw(find_closest_numbers_around);
 use List::MoreUtils qw(pairwise indexes);
 use List::Util qw(min max);
 
-use Module::Runtime;
-use Module::Pluggable
-  sub_name    => 'interpolate_methods',
-  search_path => ['Math::Function::Interpolator'],
-;
-
 =head1 NAME
 
 Math::Function::Interpolator - Interpolation made easy
 
 =head1 VERSION
 
-Version 0.07
+Version 0.08
 
 =head1 SYNOPSIS
 
@@ -54,51 +45,72 @@ HashRef of points for interpolations
 
 =cut
 
-our $VERSION = '0.07';
-
-# Automatically load all interpolate methods
-has 'interpolate_classes' => (
-    is      => 'ro',
-    lazy    => 1,
-    default => sub {
-        my ($self) = @_;
-        my @modules = $self->interpolate_methods();
-        foreach my $module (@modules) {
-            Module::Runtime::require_module($module);
-        }
-        return 1;
-    }
-);
-
-has points => (
-    is       => 'ro',
-    isa      => sub {
-        die "Points $_[0] shold be hash" unless ref $_[0] eq 'HASH';
-    },
-    required => 1,
-);
+our $VERSION = '0.08';
 
 =head1 METHODS
 
-=head2 BUILDARGS
+=head2 new
 
-BUILDARGS
+New instance method
 
 =cut
 
-sub BUILDARGS {    ## no critic (Subroutines::RequireArgUnpacking)
-    my $self = shift;
-    my %args = ref( $_[0] ) ? %{ $_[0] } : @_;
+sub new {
+    my $class = shift;
+    my %params_ref = ref( $_[0] ) ? %{ $_[0] } : @_;
+
+    confess "points are required to do interpolation"
+    unless $params_ref{'points'};
 
     # We can't interpolate properly on undef values so make sure we know
     # they are missing by removing them entirely.
-    my $points = $args{points};
-    $args{points} = {
+    my $points = $params_ref{points};
+    $params_ref{points} = {
         map { $_ => $points->{$_} }
         grep { defined $points->{$_} } keys %$points
     };
+    
+    my $self = {
+        _points => $params_ref{'points'},
+        _classes_loaded => 0
+    };
+    my $obj = bless $self, $class;
 
-    return \%args;
+    if ( $class =~/Interpolator$/i ){
+        # Load all interpolator classes when only made object from main 
+        # Interpolator classes
+        $obj->_load_interpolator_classes();
+    }
+
+    return $obj;
+}
+
+sub _load_interpolator_classes {
+    my ( $self ) = @_;
+
+    use Module::Runtime;
+    use Module::Pluggable
+        sub_name    => 'interpolate_methods',
+        search_path => ['Math::Function::Interpolator'],
+    ;
+
+    my @modules = $self->interpolate_methods();
+    foreach my $module (@modules) {
+        Module::Runtime::require_module($module);
+    }
+    $self->{'_classes_loaded'} = 1;
+    return 1;
+}
+
+=head2 points
+
+points
+
+=cut
+
+sub points {
+    my ( $self ) = @_;
+    return $self->{'_points'};
 }
 
 =head2 linear
@@ -109,11 +121,9 @@ This method do the linear interpolation. It solves for point_y linearly given po
 
 sub linear {
     my ( $self, $x ) = @_;
-    confess "point_x must be numeric" if !looks_like_number($x);
-    $self->interpolate_classes();
-    return Math::Function::Interpolator->with_traits(
-        'Math::Function::Interpolator::Linear')->new( interpolate => $self )
-      ->do_calculation($x);
+    return Math::Function::Interpolator::Linear->new(
+        points => $self->points
+    )->linear( $x );
 }
 
 =head2 quadratic
@@ -124,11 +134,9 @@ This method do the quadratic interpolation. It solves the interpolated_y value g
 
 sub quadratic {
     my ( $self, $x ) = @_;
-    confess "point_x must be numeric" if !looks_like_number($x);
-    $self->interpolate_classes();
-    return Math::Function::Interpolator->with_traits(
-        'Math::Function::Interpolator::Quadratic')->new( interpolate => $self )
-      ->do_calculation($x);
+    return Math::Function::Interpolator::Quadratic->new(
+        points => $self->points
+    )->quadratic( $x );
 }
 
 =head2 cubic
@@ -139,11 +147,9 @@ This method do the cubic interpolation. It solves the interpolated_y given point
 
 sub cubic {
     my ( $self, $x ) = @_;
-    confess "point_x must be numeric" if !looks_like_number($x);
-    $self->interpolate_classes();
-    return Math::Function::Interpolator->with_traits(
-        'Math::Function::Interpolator::Cubic')->new( interpolate => $self )
-      ->do_calculation($x);
+    return Math::Function::Interpolator::Cubic->new(
+        points => $self->points
+    )->cubic( $x );
 }
 
 =head2 closest_three_points
