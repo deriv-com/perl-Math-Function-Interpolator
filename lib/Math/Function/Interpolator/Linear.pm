@@ -4,9 +4,10 @@ use 5.006;
 use strict;
 use warnings FATAL => 'all';
 
-our $VERSION = '0.02';
+use parent 'Math::Function::Interpolator';
 
-use Moo::Role;
+our $VERSION = '0.03';
+
 use Carp qw(confess);
 use Number::Closest::XS qw(find_closest_numbers_around);
 use Scalar::Util qw(looks_like_number);
@@ -17,9 +18,9 @@ Math::Function::Interpolator::Linear - Interpolation made easy
 
 =head1 SYNOPSIS
 
-    use Math::Function::Interpolator;
+    use Math::Function::Interpolator::Linear;
 
-    my $interpolator = Math::Function::Interpolator->new(
+    my $interpolator = Math::Function::Interpolator::Linear->new(
         points => {1=>2,2=>3,3=>4}
     );
 
@@ -32,35 +33,26 @@ It solves for point_y linearly given point_x and an array of points.
 
 =head1 FIELDS
 
-=head2 interpolate (REQUIRED)
+=head2 points (REQUIRED)
 
-Interpolations class object
+HashRef of points for interpolations
 
 =cut
 
-has 'interpolate' => (
-    is       => 'ro',
-    isa      => sub {
-        die "Must be Interpolate class"
-        unless ref $_[0] eq 'Math::Function::Interpolator';
-    },
-    required => 1
-);
-
 =head1 METHODS
 
-=head2 do_calculation
+=head2 linear
 
-do_calculation
+linear
 
 =cut
 
 # Solves for point_y linearly given point_x and an array of points.
-sub do_calculation {
+sub linear {
     my ( $self, $x ) = @_;
 
     confess "sought_point[$x] must be a number" unless looks_like_number($x);
-    my $ap = $self->interpolate->points;
+    my $ap = $self->points;
     return $ap->{$x} if defined $ap->{$x};    # no need to interpolate
 
     my @Xs = keys %$ap;

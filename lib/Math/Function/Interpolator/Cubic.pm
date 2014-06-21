@@ -4,9 +4,9 @@ use 5.006;
 use strict;
 use warnings FATAL => 'all';
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
-use Moo::Role;
+use parent 'Math::Function::Interpolator';
 
 use Carp qw(confess);
 use List::MoreUtils qw(pairwise indexes);
@@ -19,9 +19,9 @@ Math::Function::Interpolator::Cubic
 
 =head1 SYNOPSIS
 
-    use Math::Function::Interpolator;
+    use Math::Function::Interpolator::Cubic;
 
-    my $interpolator = Math::Function::Interpolator->new(
+    my $interpolator = Math::Function::Interpolator::Cubic->new(
         points => {1=>2,2=>3,3=>4}
     );
 
@@ -34,42 +34,21 @@ It solves the interpolated_y given point_x and a minimum of 5 data points.
 
 =head1 FIELDS
 
-=head2 interpolate (REQUIRED)
+=head2 points (REQUIRED)
 
-Interpolations class object
+HashRef of points for interpolations
 
 =cut
 
-has 'interpolate' => (
-    is       => 'ro',
-    isa      => sub {
-        die "Must be Interpolate class"
-        unless ref $_[0] eq 'Math::Function::Interpolator';
-    },
-    required => 1
-);
-
-has _sorted_Xs => (
-    is      => 'ro',
-    lazy    => 1,
-    builder => '_build__sorted_Xs',
-);
-
-sub _build__sorted_Xs {
+sub _sorted_Xs {
     my ($self) = @_;
-    return [ sort { $a <=> $b } keys %{ $self->interpolate->points } ];
+    return [ sort { $a <=> $b } keys %{ $self->points } ];
 }
 
-has _spline_points => (
-    is         => 'ro',
-    lazy       => 1,
-    builder    => '_build__spline_points',
-);
-
-sub _build__spline_points {
+sub _spline_points {
     my ($self) = @_;
 
-    my $points_ref = $self->interpolate->points;
+    my $points_ref = $self->points;
     my $Xs         = $self->_sorted_Xs;
     my @Ys         = map { $points_ref->{$_} } @$Xs;
 
@@ -121,18 +100,18 @@ sub _extrapolate_spline {
 
 =head1 METHODS
 
-=head2 do_calculation
+=head2 cubic
 
-do_calculation
+cubic
 
 =cut
 
 # Returns the interpolated_y given point_x and a minimum of 5 data points
-sub do_calculation {
+sub cubic {
     my ( $self, $x ) = @_;
 
-    confess "sought[$x] must be numeric" if !looks_like_number($x);
-    my $ap = $self->interpolate->points;
+    confess "sought_point[$x] must be a numeric" if !looks_like_number($x);
+    my $ap = $self->points;
     return $ap->{$x} if defined $ap->{$x};    # No interpolation needed.
 
     my $Xs = $self->_sorted_Xs;

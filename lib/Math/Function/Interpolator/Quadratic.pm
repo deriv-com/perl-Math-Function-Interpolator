@@ -4,9 +4,9 @@ use 5.006;
 use strict;
 use warnings FATAL => 'all';
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
-use Moo::Role;
+use parent 'Math::Function::Interpolator';
 
 use Carp qw(confess);
 use Math::Cephes::Matrix qw(mat);
@@ -19,9 +19,9 @@ Math::Function::Interpolator::Quadratic
 
 =head1 SYNOPSIS
 
-    use Math::Function::Interpolator;
+    use Math::Function::Interpolator::Quadratic;
 
-    my $interpolator = Math::Function::Interpolator->new(
+    my $interpolator = Math::Function::Interpolator::Quadratic->new(
         points => {1=>2,2=>3,3=>4,4=>5,5=>6}
     );
 
@@ -34,43 +34,31 @@ It solves the interpolated_y given point_x and a minimum of 5 data points.
 
 =head1 FIELDS
 
-=head2 interpolate (REQUIRED)
+=head2 points (REQUIRED)
 
-Interpolations class object
-
-=cut
-
-has 'interpolate' => (
-    is       => 'ro',
-    isa      => sub {
-        die "Must be Interpolate class"
-        unless ref $_[0] eq 'Math::Function::Interpolator';
-    },
-    required => 1
-);
-
+HashRef of points for interpolations
 
 =head1 METHODS
 
-=head2 do_calculation
+=head2 quadratic
 
-do_calculation
+quadratic
 
 =cut
 
 # Returns the interpolated_y value given point_x with 3 data points
-sub do_calculation {
+sub quadratic {
     my ( $self, $x ) = @_;
 
     confess "sought_point[$x] must be a number" unless looks_like_number($x);
-    my $ap = $self->interpolate->points;
+    my $ap = $self->points;
     return $ap->{$x} if defined $ap->{$x};    # no need to interpolate
 
     my @Xs = keys %$ap;
     confess "cannot interpolate with fewer than 3 data points"
       if scalar @Xs < 3;
 
-    my @points = $self->interpolate->closest_three_points( $x, \@Xs );
+    my @points = $self->closest_three_points( $x, \@Xs );
 
     # Three cofficient
     my $abc = mat( [ map { [ $_**2, $_, 1 ] } @points ] );

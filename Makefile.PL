@@ -18,9 +18,6 @@ WriteMakefile(
         'Test::More'            => 0,
         'Test::FailWarnings'    => 0,
         'Test::Exception'       => 0,
-        'Moo'                   => 0,
-        'Moo::Role'             => 0,
-        'MooX::Traits'          => 0,
         'Module::Runtime'       => 0,
         'Module::Pluggable'     => 0,
         'Carp'                  => 0,
@@ -32,6 +29,15 @@ WriteMakefile(
         'Number::Closest::XS'   => 0,
         'Scalar::Util'          => 0,
     },
+    (! eval { ExtUtils::MakeMaker->VERSION(6.46) } ? () :
+        (META_ADD => {
+            resources => {
+                homepage   => 'https://github.com/binary-com/perl-Math-Function-Interpolator',
+                repository => 'git@github.com:binary-com/perl-Math-Function-Interpolator.git',
+                bugtracker => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=Math-Function-Interpolator',
+            },
+        })
+    ),
     PREREQ_PM => {
     },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
