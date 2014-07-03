@@ -18,8 +18,6 @@ WriteMakefile(
         'Test::More'            => 0,
         'Test::FailWarnings'    => 0,
         'Test::Exception'       => 0,
-        'Module::Runtime'       => 0,
-        'Module::Pluggable'     => 0,
         'Carp'                  => 0,
         'List::MoreUtils'       => 0,
         'List::Util'            => 0,

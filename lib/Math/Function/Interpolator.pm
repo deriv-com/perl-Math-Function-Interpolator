@@ -11,13 +11,17 @@ use Number::Closest::XS qw(find_closest_numbers_around);
 use List::MoreUtils qw(pairwise indexes);
 use List::Util qw(min max);
 
+use Math::Function::Interpolator::Linear;
+use Math::Function::Interpolator::Quadratic;
+use Math::Function::Interpolator::Cubic;
+
 =head1 NAME
 
 Math::Function::Interpolator - Interpolation made easy
 
 =head1 VERSION
 
-Version 0.08
+Version 0.09
 
 =head1 SYNOPSIS
 
@@ -45,7 +49,7 @@ HashRef of points for interpolations
 
 =cut
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 
 =head1 METHODS
 
@@ -72,34 +76,10 @@ sub new {
     
     my $self = {
         _points => $params_ref{'points'},
-        _classes_loaded => 0
     };
     my $obj = bless $self, $class;
 
-    if ( $class =~/Interpolator$/i ){
-        # Load all interpolator classes when only made object from main 
-        # Interpolator classes
-        $obj->_load_interpolator_classes();
-    }
-
     return $obj;
-}
-
-sub _load_interpolator_classes {
-    my ( $self ) = @_;
-
-    use Module::Runtime;
-    use Module::Pluggable
-        sub_name    => 'interpolate_methods',
-        search_path => ['Math::Function::Interpolator'],
-    ;
-
-    my @modules = $self->interpolate_methods();
-    foreach my $module (@modules) {
-        Module::Runtime::require_module($module);
-    }
-    $self->{'_classes_loaded'} = 1;
-    return 1;
 }
 
 =head2 points
