@@ -6,7 +6,7 @@ use warnings FATAL => 'all';
 
 our $VERSION = '0.03';
 
-use parent 'Math::Function::Interpolator';
+our @ISA = qw(Math::Function::Interpolator);
 
 use Carp qw(confess);
 use List::MoreUtils qw(pairwise indexes);
