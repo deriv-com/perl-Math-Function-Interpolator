@@ -41,12 +41,16 @@ HashRef of points for interpolations
 =cut
 
 sub _sorted_Xs {
-    my ($self) = @_;
-    return [ sort { $a <=> $b } keys %{ $self->points } ];
+    my ( $self ) = @_;
+    return $self->{'_sorted_Xs'} if $self->{'_sorted_Xs'};
+    $self->{'_sorted_Xs'} = [ sort { $a <=> $b } keys %{ $self->points } ];
+    return $self->{'_sorted_Xs'};
 }
 
 sub _spline_points {
     my ($self) = @_;
+
+    return $self->{'_spline_points'} if $self->{'_spline_points'};
 
     my $points_ref = $self->points;
     my $Xs         = $self->_sorted_Xs;
@@ -81,7 +85,9 @@ sub _spline_points {
 
     my %y_2derivative_combined = pairwise { $a => $b } @$Xs, @y_2derivative;
 
-    return \%y_2derivative_combined;
+    $self->{'_spline_points'} = \%y_2derivative_combined;
+
+    return $self->{'_spline_points'};
 }
 
 sub _extrapolate_spline {
