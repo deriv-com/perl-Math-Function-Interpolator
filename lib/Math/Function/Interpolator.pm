@@ -76,6 +76,9 @@ sub new {
     
     my $self = {
         _points => $params_ref{'points'},
+        _linear_obj    => 0,
+        _cubic_obj     => 0,
+        _quadratic_obj => 0
     };
     my $obj = bless $self, $class;
 
@@ -101,9 +104,14 @@ This method do the linear interpolation. It solves for point_y linearly given po
 
 sub linear {
     my ( $self, $x ) = @_;
-    return Math::Function::Interpolator::Linear->new(
-        points => $self->points
-    )->linear( $x );
+    my $linear_obj   = $self->{'_linear_obj'};
+    if ( !$linear_obj ){
+        $linear_obj  = Math::Function::Interpolator::Linear->new(
+            points => $self->points
+        );
+        $self->{'_linear_obj'} = $linear_obj;
+    }
+    return $linear_obj->linear( $x );
 }
 
 =head2 quadratic
@@ -114,9 +122,14 @@ This method do the quadratic interpolation. It solves the interpolated_y value g
 
 sub quadratic {
     my ( $self, $x ) = @_;
-    return Math::Function::Interpolator::Quadratic->new(
-        points => $self->points
-    )->quadratic( $x );
+    my $quadratic_obj = $self->{'_quadratic_obj'};
+    if ( !$quadratic_obj ) {
+        $quadratic_obj = Math::Function::Interpolator::Quadratic->new(
+            points => $self->points
+        );
+        $self->{'_quadratic_obj'} = $quadratic_obj;
+    }
+    return $quadratic_obj->quadratic( $x );
 }
 
 =head2 cubic
@@ -127,9 +140,14 @@ This method do the cubic interpolation. It solves the interpolated_y given point
 
 sub cubic {
     my ( $self, $x ) = @_;
-    return Math::Function::Interpolator::Cubic->new(
-        points => $self->points
-    )->cubic( $x );
+    my $cubic_obj = $self->{'_cubic_obj'};
+    if ( !$cubic_obj ) {
+        $cubic_obj = Math::Function::Interpolator::Cubic->new(
+            points => $self->points
+        );
+        $self->{'_cubic_obj'} = $cubic_obj;
+    }
+    return $cubic_obj->cubic( $x );
 }
 
 =head2 closest_three_points
