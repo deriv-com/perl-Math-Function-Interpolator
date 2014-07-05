@@ -4,14 +4,13 @@ use 5.006;
 use strict;
 use warnings FATAL => 'all';
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
-use parent 'Math::Function::Interpolator';
+our @ISA = qw(Math::Function::Interpolator);
 
 use Carp qw(confess);
 use Math::Cephes::Matrix qw(mat);
 use Scalar::Util qw(looks_like_number);
-use Try::Tiny;
 
 =head1 NAME
 
@@ -66,8 +65,8 @@ sub quadratic {
     my $y = [ map { $ap->{$_} } @points ];
 
     my $solution;
-    try { $solution = $abc->simq($y) }
-    catch { confess 'Insoluble matrix: ' . $_; };
+    eval { $solution = $abc->simq($y) };
+    confess 'Insoluble matrix: ' . $_ if $@;
     my ( $a, $b, $c ) = @$solution;
 
     return ( $a * ( $x**2 ) + $b * $x + $c );

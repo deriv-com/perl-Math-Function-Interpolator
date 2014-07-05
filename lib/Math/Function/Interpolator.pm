@@ -11,13 +11,17 @@ use Number::Closest::XS qw(find_closest_numbers_around);
 use List::MoreUtils qw(pairwise indexes);
 use List::Util qw(min max);
 
+use Math::Function::Interpolator::Linear;
+use Math::Function::Interpolator::Quadratic;
+use Math::Function::Interpolator::Cubic;
+
 =head1 NAME
 
 Math::Function::Interpolator - Interpolation made easy
 
 =head1 VERSION
 
-Version 0.08
+Version 0.09
 
 =head1 SYNOPSIS
 
@@ -45,7 +49,7 @@ HashRef of points for interpolations
 
 =cut
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 
 =head1 METHODS
 
@@ -72,34 +76,13 @@ sub new {
     
     my $self = {
         _points => $params_ref{'points'},
-        _classes_loaded => 0
+        _linear_obj    => 0,
+        _cubic_obj     => 0,
+        _quadratic_obj => 0
     };
     my $obj = bless $self, $class;
 
-    if ( $class =~/Interpolator$/i ){
-        # Load all interpolator classes when only made object from main 
-        # Interpolator classes
-        $obj->_load_interpolator_classes();
-    }
-
     return $obj;
-}
-
-sub _load_interpolator_classes {
-    my ( $self ) = @_;
-
-    use Module::Runtime;
-    use Module::Pluggable
-        sub_name    => 'interpolate_methods',
-        search_path => ['Math::Function::Interpolator'],
-    ;
-
-    my @modules = $self->interpolate_methods();
-    foreach my $module (@modules) {
-        Module::Runtime::require_module($module);
-    }
-    $self->{'_classes_loaded'} = 1;
-    return 1;
 }
 
 =head2 points
@@ -121,9 +104,14 @@ This method do the linear interpolation. It solves for point_y linearly given po
 
 sub linear {
     my ( $self, $x ) = @_;
-    return Math::Function::Interpolator::Linear->new(
-        points => $self->points
-    )->linear( $x );
+    my $linear_obj   = $self->{'_linear_obj'};
+    if ( !$linear_obj ){
+        $linear_obj  = Math::Function::Interpolator::Linear->new(
+            points => $self->points
+        );
+        $self->{'_linear_obj'} = $linear_obj;
+    }
+    return $linear_obj->linear( $x );
 }
 
 =head2 quadratic
@@ -134,9 +122,14 @@ This method do the quadratic interpolation. It solves the interpolated_y value g
 
 sub quadratic {
     my ( $self, $x ) = @_;
-    return Math::Function::Interpolator::Quadratic->new(
-        points => $self->points
-    )->quadratic( $x );
+    my $quadratic_obj = $self->{'_quadratic_obj'};
+    if ( !$quadratic_obj ) {
+        $quadratic_obj = Math::Function::Interpolator::Quadratic->new(
+            points => $self->points
+        );
+        $self->{'_quadratic_obj'} = $quadratic_obj;
+    }
+    return $quadratic_obj->quadratic( $x );
 }
 
 =head2 cubic
@@ -147,9 +140,14 @@ This method do the cubic interpolation. It solves the interpolated_y given point
 
 sub cubic {
     my ( $self, $x ) = @_;
-    return Math::Function::Interpolator::Cubic->new(
-        points => $self->points
-    )->cubic( $x );
+    my $cubic_obj = $self->{'_cubic_obj'};
+    if ( !$cubic_obj ) {
+        $cubic_obj = Math::Function::Interpolator::Cubic->new(
+            points => $self->points
+        );
+        $self->{'_cubic_obj'} = $cubic_obj;
+    }
+    return $cubic_obj->cubic( $x );
 }
 
 =head2 closest_three_points

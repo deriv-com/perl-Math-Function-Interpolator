@@ -4,9 +4,9 @@ use 5.006;
 use strict;
 use warnings FATAL => 'all';
 
-use parent 'Math::Function::Interpolator';
+our @ISA = qw(Math::Function::Interpolator);
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 use Carp qw(confess);
 use Number::Closest::XS qw(find_closest_numbers_around);
