@@ -2,6 +2,8 @@ Math-Function-Interpolator
 
 Math::Function::Interpolator helps you to do the interpolation calculation with linear, quadratic and cubic methods.
 
+[![Build Status](https://api.travis-ci.org/shardiwal/perl-Math-Function-Interpolator.png)](https://travis-ci.org/shardiwal/perl-Math-Function-Interpolator)
+
 INSTALLATION
 
 To install this module, run the following commands:
