@@ -22,7 +22,7 @@ Math::Function::Interpolator::Cubic
     use Math::Function::Interpolator::Cubic;
 
     my $interpolator = Math::Function::Interpolator::Cubic->new(
-        points => {1=>2,2=>3,3=>4}
+        points => {1=>2,2=>3,3=>4,4=>5,5=>6,6=>7}
     );
 
     $interpolator->cubic(2.5);
