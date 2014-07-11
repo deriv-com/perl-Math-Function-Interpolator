@@ -6,7 +6,7 @@ use warnings FATAL => 'all';
 
 our @ISA = qw(Math::Function::Interpolator);
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 use Carp qw(confess);
 use Number::Closest::XS qw(find_closest_numbers_around);
@@ -29,7 +29,7 @@ Math::Function::Interpolator::Linear - Interpolation made easy
 =head1 DESCRIPTION
 
 Math::Function::Interpolator::Linear helps you to do the interpolation calculation with linear method.
-It solves for point_y linearly given point_x and an array of points.    
+It solves for point_y linearly given point_x and an array of more than 2 data points. 
 
 =head1 FIELDS
 

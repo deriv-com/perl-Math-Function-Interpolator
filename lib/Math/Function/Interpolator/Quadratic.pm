@@ -4,7 +4,7 @@ use 5.006;
 use strict;
 use warnings FATAL => 'all';
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 our @ISA = qw(Math::Function::Interpolator);
 
@@ -29,7 +29,7 @@ Math::Function::Interpolator::Quadratic
 =head1 DESCRIPTION
 
 Math::Function::Interpolator::Quadratic helps you to do the interpolation calculation with quadratic method.
-It solves the interpolated_y given point_x and a minimum of 5 data points. 
+It solves the interpolated_y given point_x and a minimum of 3 data points. 
 
 =head1 FIELDS
 
