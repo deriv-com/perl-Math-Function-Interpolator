@@ -21,7 +21,7 @@ Math::Function::Interpolator - Interpolation made easy
 
 =head1 VERSION
 
-Version 0.09
+Version 1.0
 
 =head1 SYNOPSIS
 
@@ -41,6 +41,10 @@ Version 0.09
 
 Math::Function::Interpolator helps you to do the interpolation calculation with linear, quadratic and cubic methods.
 
+1. Linear method (needs more than 1 data point)
+1. Quadratic method (needs more than 2 data points)
+1. Cubic method, it's a Cubic Spline method (needs more than 4 data points)
+
 =head1 FIELDS
 
 =head2 points (REQUIRED)
@@ -49,7 +53,7 @@ HashRef of points for interpolations
 
 =cut
 
-our $VERSION = '0.09';
+our $VERSION = '1.0';
 
 =head1 METHODS
 
@@ -99,6 +103,7 @@ sub points {
 =head2 linear
 
 This method do the linear interpolation. It solves for point_y linearly given point_x and an array of points.
+This method needs more than 1 data point.
 
 =cut
 
@@ -117,6 +122,7 @@ sub linear {
 =head2 quadratic
 
 This method do the quadratic interpolation. It solves the interpolated_y value given point_x with 3 data points.
+This method needs more than 2 data point.
 
 =cut
 
@@ -135,6 +141,7 @@ sub quadratic {
 =head2 cubic
 
 This method do the cubic interpolation. It solves the interpolated_y given point_x and a minimum of 5 data points.
+This method needs more than 4 data point.
 
 =cut
 

@@ -1,8 +1,31 @@
-Math-Function-Interpolator
+**Math-Function-Interpolator**
 
 Math::Function::Interpolator helps you to do the interpolation calculation with linear, quadratic and cubic methods.
 
+1. Linear method (needs more than 1 data point)
+1. Quadratic method (needs more than 2 data points)
+1. Cubic method, it's a Cubic Spline method (needs more than 4 data points)
+
+
 [![Build Status](https://travis-ci.org/binary-com/perl-Math-Function-Interpolator.svg?branch=master)](https://travis-ci.org/binary-com/perl-Math-Function-Interpolator)
+
+SYNOPSIS
+
+    use Math::Function::Interpolator;
+
+    my $interpolator = Math::Function::Interpolator->new(
+        points => {1=>2,2=>3,3=>4,4=>5,5=>6,6=>7}
+    );
+
+    # Should have more than 1 data points
+    $interpolator->linear(2.5);
+
+    # Should have more than 2 data points
+    $interpolator->quadratic(2.5);
+
+    # Should have more than 4 data points
+    $interpolator->cubic(2.5);
+
 
 INSTALLATION
 
