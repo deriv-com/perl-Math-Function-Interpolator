@@ -6,9 +6,8 @@ Math::Function::Interpolator helps you to do the interpolation calculation with 
 1. Quadratic method (needs more than 2 data points)
 1. Cubic method, it's a Cubic Spline method (needs more than 4 data points)
 
-
+[![codecov](https://codecov.io/gh/binary-com/perl-Math-Function-Interpolator/branch/master/graph/badge.svg)](https://codecov.io/gh/binary-com/perl-Math-Function-Interpolator)
 [![Build Status](https://travis-ci.org/binary-com/perl-Math-Function-Interpolator.svg?branch=master)](https://travis-ci.org/binary-com/perl-Math-Function-Interpolator)
-[![Coverage Status](https://coveralls.io/repos/binary-com/perl-Math-Function-Interpolator/badge.png?branch=master)](https://coveralls.io/r/binary-com/perl-Math-Function-Interpolator?branch=master)
 [![Gitter chat](https://badges.gitter.im/binary-com/perl-Math-Function-Interpolator.png)](https://gitter.im/binary-com/perl-Math-Function-Interpolator)
 
 SYNOPSIS
