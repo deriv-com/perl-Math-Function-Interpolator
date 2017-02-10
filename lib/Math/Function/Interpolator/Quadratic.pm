@@ -65,8 +65,8 @@ sub quadratic {
     my $y = [ map { $ap->{$_} } @points ];
 
     my $solution;
-    eval { $solution = $abc->simq($y) };
-    confess 'Insoluble matrix: ' . $_ if $@;
+    eval { $solution = $abc->simq($y) ; 1 } or
+      confess 'Insoluble matrix: ' . $_;
     my ( $a, $b, $c ) = @$solution;
 
     return ( $a * ( $x**2 ) + $b * $x + $c );
