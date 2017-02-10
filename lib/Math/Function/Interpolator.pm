@@ -59,8 +59,8 @@ New instance method
 
 =cut
 
-sub new {
-    my $class = shift; ## no critic (RequireArgUnpacking)
+sub new { ## no critic (RequireArgUnpacking)
+    my $class = shift;
     my %params_ref = ref( $_[0] ) ? %{ $_[0] } : @_;
 
     confess "points are required to do interpolation"
