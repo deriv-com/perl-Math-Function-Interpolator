@@ -73,7 +73,7 @@ sub new {
         map { $_ => $points->{$_} }
         grep { defined $points->{$_} } keys %$points
     };
-    
+
     my $self = {
         _points => $params_ref{'points'},
         _linear_obj    => 0,
