@@ -4,7 +4,7 @@ use 5.006;
 use strict;
 use warnings FATAL => 'all';
 
-our $VERSION = '0.06';
+## VERSION
 
 our @ISA = qw(Math::Function::Interpolator);
 
