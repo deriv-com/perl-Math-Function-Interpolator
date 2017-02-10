@@ -30,7 +30,7 @@ Math::Function::Interpolator::Cubic
 =head1 DESCRIPTION
 
 Math::Function::Interpolator::Cubic helps you to do the interpolation calculation with cubic method.
-It solves the interpolated_y given point_x and a minimum of 5 data points. 
+It solves the interpolated_y given point_x and a minimum of 5 data points.
 
 =head1 FIELDS
 

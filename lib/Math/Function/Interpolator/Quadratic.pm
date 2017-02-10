@@ -29,7 +29,7 @@ Math::Function::Interpolator::Quadratic
 =head1 DESCRIPTION
 
 Math::Function::Interpolator::Quadratic helps you to do the interpolation calculation with quadratic method.
-It solves the interpolated_y given point_x and a minimum of 3 data points. 
+It solves the interpolated_y given point_x and a minimum of 3 data points.
 
 =head1 FIELDS
 
