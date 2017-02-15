@@ -19,10 +19,6 @@ use Math::Function::Interpolator::Cubic;
 
 Math::Function::Interpolator - Interpolation made easy
 
-=head1 VERSION
-
-Version 1.0
-
 =head1 SYNOPSIS
 
     use Math::Function::Interpolator;
@@ -53,7 +49,7 @@ HashRef of points for interpolations
 
 =cut
 
-our $VERSION = '1.0';
+our $VERSION = '1.01';
 
 =head1 METHODS
 
@@ -63,12 +59,12 @@ New instance method
 
 =cut
 
-sub new {
+sub new {    ## no critic (RequireArgUnpacking)
     my $class = shift;
-    my %params_ref = ref( $_[0] ) ? %{ $_[0] } : @_;
+    my %params_ref = ref($_[0]) ? %{$_[0]} : @_;
 
     confess "points are required to do interpolation"
-    unless $params_ref{'points'};
+        unless $params_ref{'points'};
 
     # We can't interpolate properly on undef values so make sure we know
     # they are missing by removing them entirely.
@@ -77,9 +73,9 @@ sub new {
         map { $_ => $points->{$_} }
         grep { defined $points->{$_} } keys %$points
     };
-    
+
     my $self = {
-        _points => $params_ref{'points'},
+        _points        => $params_ref{'points'},
         _linear_obj    => 0,
         _cubic_obj     => 0,
         _quadratic_obj => 0
@@ -96,7 +92,7 @@ points
 =cut
 
 sub points {
-    my ( $self ) = @_;
+    my ($self) = @_;
     return $self->{'_points'};
 }
 
@@ -108,15 +104,13 @@ This method needs more than 1 data point.
 =cut
 
 sub linear {
-    my ( $self, $x ) = @_;
-    my $linear_obj   = $self->{'_linear_obj'};
-    if ( !$linear_obj ){
-        $linear_obj  = Math::Function::Interpolator::Linear->new(
-            points => $self->points
-        );
+    my ($self, $x) = @_;
+    my $linear_obj = $self->{'_linear_obj'};
+    if (!$linear_obj) {
+        $linear_obj = Math::Function::Interpolator::Linear->new(points => $self->points);
         $self->{'_linear_obj'} = $linear_obj;
     }
-    return $linear_obj->linear( $x );
+    return $linear_obj->linear($x);
 }
 
 =head2 quadratic
@@ -127,15 +121,13 @@ This method needs more than 2 data point.
 =cut
 
 sub quadratic {
-    my ( $self, $x ) = @_;
+    my ($self, $x) = @_;
     my $quadratic_obj = $self->{'_quadratic_obj'};
-    if ( !$quadratic_obj ) {
-        $quadratic_obj = Math::Function::Interpolator::Quadratic->new(
-            points => $self->points
-        );
+    if (!$quadratic_obj) {
+        $quadratic_obj = Math::Function::Interpolator::Quadratic->new(points => $self->points);
         $self->{'_quadratic_obj'} = $quadratic_obj;
     }
-    return $quadratic_obj->quadratic( $x );
+    return $quadratic_obj->quadratic($x);
 }
 
 =head2 cubic
@@ -146,15 +138,13 @@ This method needs more than 4 data point.
 =cut
 
 sub cubic {
-    my ( $self, $x ) = @_;
+    my ($self, $x) = @_;
     my $cubic_obj = $self->{'_cubic_obj'};
-    if ( !$cubic_obj ) {
-        $cubic_obj = Math::Function::Interpolator::Cubic->new(
-            points => $self->points
-        );
+    if (!$cubic_obj) {
+        $cubic_obj = Math::Function::Interpolator::Cubic->new(points => $self->points);
         $self->{'_cubic_obj'} = $cubic_obj;
     }
-    return $cubic_obj->cubic( $x );
+    return $cubic_obj->cubic($x);
 }
 
 =head2 closest_three_points
@@ -165,17 +155,17 @@ sub cubic {
 =cut
 
 sub closest_three_points {
-    my ( $self, $sought, $all_points ) = @_;
+    my ($self, $sought, $all_points) = @_;
 
     my @ap = sort { $a <=> $b } @{$all_points};
     my $length = scalar @ap;
 
-    my ( $first, $second ) =
-      @{ find_closest_numbers_around( $sought, $all_points, 2 ) };
+    my ($first, $second) =
+        @{find_closest_numbers_around($sought, $all_points, 2)};
     my @indexes = indexes { $first == $_ or $second == $_ } @ap;
     my $third_index =
-      ( max(@indexes) < $length - 2 ) ? max(@indexes) + 1 : min(@indexes) - 1;
-    my @sorted = sort { $a <=> $b } ( $first, $second, $ap[$third_index] );
+        (max(@indexes) < $length - 2) ? max(@indexes) + 1 : min(@indexes) - 1;
+    my @sorted = sort { $a <=> $b } ($first, $second, $ap[$third_index]);
 
     return @sorted;
 }
@@ -222,48 +212,6 @@ L<http://search.cpan.org/dist/Math-Function-Interpolator/>
 
 
 =head1 ACKNOWLEDGEMENTS
-
-
-=head1 LICENSE AND COPYRIGHT
-
-Copyright 2014 Binary.com.
-
-This program is free software; you can redistribute it and/or modify it
-under the terms of the the Artistic License (2.0). You may obtain a
-copy of the full license at:
-
-L<http://www.perlfoundation.org/artistic_license_2_0>
-
-Any use, modification, and distribution of the Standard or Modified
-Versions is governed by this Artistic License. By using, modifying or
-distributing the Package, you accept this license. Do not use, modify,
-or distribute the Package, if you do not accept this license.
-
-If your Modified Version has been derived from a Modified Version made
-by someone other than you, you are nevertheless required to ensure that
-your Modified Version complies with the requirements of this license.
-
-This license does not grant you the right to use any trademark, service
-mark, tradename, or logo of the Copyright Holder.
-
-This license includes the non-exclusive, worldwide, free-of-charge
-patent license to make, have made, use, offer to sell, sell, import and
-otherwise transfer the Package with respect to any patent claims
-licensable by the Copyright Holder that are necessarily infringed by the
-Package. If you institute patent litigation (including a cross-claim or
-counterclaim) against any party alleging that the Package constitutes
-direct or contributory patent infringement, then this Artistic License
-to you shall terminate on the date that such litigation is filed.
-
-Disclaimer of Warranty: THE PACKAGE IS PROVIDED BY THE COPYRIGHT HOLDER
-AND CONTRIBUTORS "AS IS' AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES.
-THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
-PURPOSE, OR NON-INFRINGEMENT ARE DISCLAIMED TO THE EXTENT PERMITTED BY
-YOUR LOCAL LAW. UNLESS REQUIRED BY LAW, NO COPYRIGHT HOLDER OR
-CONTRIBUTOR WILL BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, OR
-CONSEQUENTIAL DAMAGES ARISING IN ANY WAY OUT OF THE USE OF THE PACKAGE,
-EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 
 =cut
 
