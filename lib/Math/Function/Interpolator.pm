@@ -49,7 +49,7 @@ HashRef of points for interpolations
 
 =cut
 
-our $VERSION = '1.0';
+our $VERSION = '1.01';
 
 =head1 METHODS
 
@@ -59,12 +59,12 @@ New instance method
 
 =cut
 
-sub new { ## no critic (RequireArgUnpacking)
+sub new {    ## no critic (RequireArgUnpacking)
     my $class = shift;
-    my %params_ref = ref( $_[0] ) ? %{ $_[0] } : @_;
+    my %params_ref = ref($_[0]) ? %{$_[0]} : @_;
 
     confess "points are required to do interpolation"
-    unless $params_ref{'points'};
+        unless $params_ref{'points'};
 
     # We can't interpolate properly on undef values so make sure we know
     # they are missing by removing them entirely.
@@ -75,7 +75,7 @@ sub new { ## no critic (RequireArgUnpacking)
     };
 
     my $self = {
-        _points => $params_ref{'points'},
+        _points        => $params_ref{'points'},
         _linear_obj    => 0,
         _cubic_obj     => 0,
         _quadratic_obj => 0
@@ -92,7 +92,7 @@ points
 =cut
 
 sub points {
-    my ( $self ) = @_;
+    my ($self) = @_;
     return $self->{'_points'};
 }
 
@@ -104,15 +104,13 @@ This method needs more than 1 data point.
 =cut
 
 sub linear {
-    my ( $self, $x ) = @_;
-    my $linear_obj   = $self->{'_linear_obj'};
-    if ( !$linear_obj ){
-        $linear_obj  = Math::Function::Interpolator::Linear->new(
-            points => $self->points
-        );
+    my ($self, $x) = @_;
+    my $linear_obj = $self->{'_linear_obj'};
+    if (!$linear_obj) {
+        $linear_obj = Math::Function::Interpolator::Linear->new(points => $self->points);
         $self->{'_linear_obj'} = $linear_obj;
     }
-    return $linear_obj->linear( $x );
+    return $linear_obj->linear($x);
 }
 
 =head2 quadratic
@@ -123,15 +121,13 @@ This method needs more than 2 data point.
 =cut
 
 sub quadratic {
-    my ( $self, $x ) = @_;
+    my ($self, $x) = @_;
     my $quadratic_obj = $self->{'_quadratic_obj'};
-    if ( !$quadratic_obj ) {
-        $quadratic_obj = Math::Function::Interpolator::Quadratic->new(
-            points => $self->points
-        );
+    if (!$quadratic_obj) {
+        $quadratic_obj = Math::Function::Interpolator::Quadratic->new(points => $self->points);
         $self->{'_quadratic_obj'} = $quadratic_obj;
     }
-    return $quadratic_obj->quadratic( $x );
+    return $quadratic_obj->quadratic($x);
 }
 
 =head2 cubic
@@ -142,15 +138,13 @@ This method needs more than 4 data point.
 =cut
 
 sub cubic {
-    my ( $self, $x ) = @_;
+    my ($self, $x) = @_;
     my $cubic_obj = $self->{'_cubic_obj'};
-    if ( !$cubic_obj ) {
-        $cubic_obj = Math::Function::Interpolator::Cubic->new(
-            points => $self->points
-        );
+    if (!$cubic_obj) {
+        $cubic_obj = Math::Function::Interpolator::Cubic->new(points => $self->points);
         $self->{'_cubic_obj'} = $cubic_obj;
     }
-    return $cubic_obj->cubic( $x );
+    return $cubic_obj->cubic($x);
 }
 
 =head2 closest_three_points
@@ -161,17 +155,17 @@ sub cubic {
 =cut
 
 sub closest_three_points {
-    my ( $self, $sought, $all_points ) = @_;
+    my ($self, $sought, $all_points) = @_;
 
     my @ap = sort { $a <=> $b } @{$all_points};
     my $length = scalar @ap;
 
-    my ( $first, $second ) =
-      @{ find_closest_numbers_around( $sought, $all_points, 2 ) };
+    my ($first, $second) =
+        @{find_closest_numbers_around($sought, $all_points, 2)};
     my @indexes = indexes { $first == $_ or $second == $_ } @ap;
     my $third_index =
-      ( max(@indexes) < $length - 2 ) ? max(@indexes) + 1 : min(@indexes) - 1;
-    my @sorted = sort { $a <=> $b } ( $first, $second, $ap[$third_index] );
+        (max(@indexes) < $length - 2) ? max(@indexes) + 1 : min(@indexes) - 1;
+    my @sorted = sort { $a <=> $b } ($first, $second, $ap[$third_index]);
 
     return @sorted;
 }
