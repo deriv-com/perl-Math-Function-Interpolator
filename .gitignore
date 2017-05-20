@@ -5,7 +5,6 @@ inc/
 Build
 !Build/
 Build.bat
-/Makefile
 /Makefile.old
 /MANIFEST.bak
 /META.yml
