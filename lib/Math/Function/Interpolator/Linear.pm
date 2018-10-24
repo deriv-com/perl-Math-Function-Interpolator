@@ -2,7 +2,7 @@ package Math::Function::Interpolator::Linear;
 
 use 5.006;
 use strict;
-use warnings FATAL => 'all';
+use warnings;
 
 our @ISA = qw(Math::Function::Interpolator);
 
