@@ -2,7 +2,7 @@ package Math::Function::Interpolator::Quadratic;
 
 use 5.006;
 use strict;
-use warnings FATAL => 'all';
+use warnings;
 
 ## VERSION
 

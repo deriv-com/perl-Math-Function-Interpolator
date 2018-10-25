@@ -2,7 +2,7 @@ package Math::Function::Interpolator;
 
 use 5.006;
 use strict;
-use warnings FATAL => 'all';
+use warnings;
 
 use Carp qw(confess);
 use Scalar::Util qw(looks_like_number);
