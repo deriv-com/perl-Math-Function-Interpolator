@@ -49,7 +49,7 @@ HashRef of points for interpolations
 
 =cut
 
-our $VERSION = '1.01';
+our $VERSION = '1.02';
 
 =head1 METHODS
 
