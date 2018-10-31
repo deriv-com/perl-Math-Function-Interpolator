@@ -67,9 +67,9 @@ sub quadratic {
     my $solution;
     eval { $solution = $abc->simq($y) ; 1 } or
       confess 'Insoluble matrix: ' . $_;
-    my ( $a, $b, $c ) = @$solution;
+    my ( $A, $B, $C ) = @$solution;
 
-    return ( $a * ( $x**2 ) + $b * $x + $c );
+    return ( $A * ( $x**2 ) + $B * $x + $C );
 }
 
 =head1 AUTHOR
