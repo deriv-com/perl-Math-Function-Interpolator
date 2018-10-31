@@ -9,7 +9,6 @@ use warnings;
 our @ISA = qw(Math::Function::Interpolator);
 
 use Carp qw(confess);
-use List::MoreUtils qw(pairwise indexes);
 use Number::Closest::XS qw(find_closest_numbers_around);
 use Scalar::Util qw(looks_like_number);
 
@@ -83,7 +82,7 @@ sub _spline_points {
         $y_2derivative[$i] = $y_2derivative[$i] * $y_2derivative[ $i + 1 ] + $u[$i];
     }
 
-    my %y_2derivative_combined = pairwise { $a => $b } @$Xs, @y_2derivative;
+    my %y_2derivative_combined = map { $Xs->[$_] => $y_2derivative[$_] } 0 .. $#y_2derivative;
 
     $self->{'_spline_points'} = \%y_2derivative_combined;
 
