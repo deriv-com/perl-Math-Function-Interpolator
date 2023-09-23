@@ -1,18 +1,40 @@
 name: Build workflow
 run-name: Build workflow
-on: [push]
+on:
+  workflow_dispatch:
+  push:
+    branches:
+    - master
+  pull_request:
 jobs:
-  Explore-GitHub-Actions:
+  test:
     runs-on: ubuntu-latest
+    container:
+      image: perldocker/perl-tester:${{ matrix.perl-version }}
+    strategy:
+      matrix:
+        perl-version:
+        - '5.20'
+        - '5.22'
+        - '5.24'
+        - '5.26'
+        - '5.28'
+        - '5.30'
+        - '5.32'
+        - '5.34'
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-      - name: Check out repository code
-        uses: actions/checkout@v3
-      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-      - name: List files in the repository
-        run: |
-          ls ${{ github.workspace }}
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+    - uses: actions/checkout@v4
+    - name: Install Dzil
+      run: cpm install -g --no-test Dist::Zilla Dist::Zilla::App::Command::cover
+    - name: Install dzil author dependencies
+      run: |
+        cpm install -g \
+        -w 2 \
+        --mirror=http://cpan.cpantesters.org/ $(dzil authordeps --missing)
+    - name: Install dist deps
+      run: |
+        cpm install -g \
+        -w 2 \
+        --mirror=http://cpan.cpantesters.org/ $(dzil listdeps --author --missing)
+    - name: Run Tests
+      run: dzil smoke --release --author && dzil cover -test && dzil xtest
